@@ -10,7 +10,3 @@ LLMVoX: Autoregressive Streaming Text-to-Speech Model for Any LLM
 \**Equally contributing first authors*
 
 #### **Mohamed Bin Zayed University of Artificial Intelligence (MBZUAI), UAE**
-[![Website](https://img.shields.io/badge/Project-Website-87CEEB)](https://github.com/mbzuai-oryx/BiMediX2)
-[![Paper](https://img.shields.io/badge/arXiv-Paper-<COLOR>.svg)](https://arxiv.org/abs/2412.07769)
-[![HuggingFace](https://img.shields.io/badge/HuggingFace-Model-F9D371)](https://huggingface.co/collections/MBZUAI/bimedix2-675ee7528464dfd03f746127)
-[![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey)](https://github.com/mbzuai-oryx/BiMediX/blob/main/LICENSE.txt)
