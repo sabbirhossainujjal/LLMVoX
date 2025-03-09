@@ -328,15 +328,6 @@ The training configuration is in `configs/train_config.py`:
   - `out_dir`: Output directory for checkpoints
   - `encoder_model_path`: Path to ByT5 model for multilingual grapheme-to-phoneme conversion from [CharsiuG2P](https://github.com/lingjzhu/CharsiuG2P/tree/main) that provides phoneme embeddings for words
 
-## Training Commands
-```bash
-python train.py --batch_size=8 --learning_rate=5e-5 --n_layer=6
-#Distributed Training
-torchrun --standalone --nproc_per_node=4 train.py --batch_size=16
-```
-
-## Launch Training 
-
 ```bash
 python train.py \
   --n_layer=4 \
@@ -367,6 +358,14 @@ python train.py \
 ```
 
 This comprehensive command shows all configurable parameters for training a LLMVoX model. Adjust values based on your hardware capabilities and specific requirements.
+
+## Launch Training
+```bash
+#Single GPU
+python train.py --batch_size=8 --learning_rate=5e-5 --n_layer=6
+#Distributed Training
+torchrun --standalone --nproc_per_node=4 train.py --batch_size=16
+```
 
 ## Citation
 
