@@ -289,6 +289,8 @@ def api_call(endpoint, payload):
     threading.Thread(target=stream_audio).start()
     threading.Thread(target=play_audio).start()
 ```
+#### Custom models
+You can easily create text-streamer for your custom model and integrate it with LLMVoX , refer to  `inference` to see the streamer template for LLMs ,VLMs and Multimodal LLMs.
 
 # Training Guide
 
