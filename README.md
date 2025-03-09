@@ -290,7 +290,7 @@ def api_call(endpoint, payload):
     threading.Thread(target=play_audio).start()
 ```
 
-# LLMVoX Training Guide
+# Training Guide
 
 ## Dataset Preparation
 
