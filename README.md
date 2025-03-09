@@ -294,6 +294,10 @@ You can easily create text-streamer for your custom model and integrate it with 
 
 
 # Local Demo UI
+<p align="center">
+    <img src="assets/ui.png" alt="Demo UI" width="800px">
+</p>
+
 This local demo UI is built using PyQt5.
 # Launch demo
 python run_ui.py [options]
