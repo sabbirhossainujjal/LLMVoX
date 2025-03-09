@@ -210,7 +210,7 @@ python streaming_server.py --chat_type text --llm_checkpoint "meta-llama/Llama-3
 python streaming_server.py --chat_type visual_speech --llm_checkpoint "Qwen/Qwen2.5-VL-7B-Instruct" --llm_device "cuda:0"  --asr_model "small"
 ```
 
-#### Multimodal Chat (Audio + Image → Speech)
+#### Multimodal Chat with no ASR for models like Phi-4-multimodal-instruct (Speech + Image → Speech) 
 
 ```bash
 # Using Phi-4-multimodal-instruct which has multimodal input with speech , images and text 
