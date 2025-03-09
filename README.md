@@ -62,6 +62,21 @@ mkdir -p CHECKPOINTS
 
 ### Configuration Basics
 
+## Quick Start
+
+### Download Required Checkpoints
+
+Download the necessary model checkpoints from Hugging Face:
+
+🤗 **Hugging Face Repository**: [MBZUAI/LLMVoX](https://huggingface.co/MBZUAI/LLMVoX/tree/main)
+
+### Configuration Basics
+
+LLMVoX requires a few base paths to be set correctly in the inference configuration file at `configs/inference_config.py`:
+
+* `wavtokenizer_model_path`: Path to the pretrained WavTokenizer model checkpoint
+* `llmvox_checkpoint_path`: Path to the trained LLMVoX model checkpoint
+
 LLMVoX requires a few base paths to be set correctly in the inference configuration file at `configs/inference_config.py`:
 
 * `wavtokenizer_model_path`: Path to the pretrained WavTokenizer model checkpoint
