@@ -19,10 +19,11 @@ Mohamed Bin Zayed University of Artificial Intelligence (MBZUAI), UAE
 </p>
 
 <p align="center">
-    <video width="800" controls>
-        <source src="assets/demo_video.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
+  <a href="assets/demo_video.mp4">
+    <img src="assets/thumbnail.png" alt="LLMVoX Demo Video" width="800px">
+  </a>
+  <br>
+  <em>Click the image to view the demo video</em>
 </p>
 
 ## Overview
