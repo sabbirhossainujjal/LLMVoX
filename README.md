@@ -18,6 +18,13 @@ Mohamed Bin Zayed University of Artificial Intelligence (MBZUAI), UAE
     <img src="assets/arch_diagram.svg" alt="LLMVoX Architecture" width="800px">
 </p>
 
+<p align="center">
+    <video width="800" controls>
+        <source src="assets/demo_video.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+</p>
+
 ## Overview
 
 LLMVoX is a lightweight 30M-parameter, LLM-agnostic, autoregressive streaming Text-to-Speech (TTS) system designed to convert text outputs from Large Language Models into high-fidelity streaming speech with low latency. Our approach achieves significantly lower Word Error Rate compared to speech-enabled LLMs while operating at comparable latency and speech quality.
