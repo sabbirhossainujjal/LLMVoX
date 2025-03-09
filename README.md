@@ -223,7 +223,7 @@ python streaming_server.py --chat_type multimodal --llm_checkpoint "llava-hf/lla
 # Client side API reference 
 
 Once the streaming server starts , the following is the client side API reference.
-## Endpoints & Parameters
+### Endpoints & Parameters
 
 | Endpoint | Purpose | Required Parameters |
 |----------|---------|---------------------|
