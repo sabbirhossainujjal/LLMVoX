@@ -64,10 +64,7 @@ mkdir -p CHECKPOINTS
 
 LLMVoX requires a few base paths to be set correctly in the inference configuration file at `configs/inference_config.py`:
 
-* `wav_config_path`: Path to WavTokenizer configuration file
-* `wav_model_path`: Path to the pretrained WavTokenizer model checkpoint
-* `encoder_model_path`: Path to the G2P model for phonetic embeddings
-* `tokenizer_path`: Path to the ByT5 tokenizer
+* `wavtokenizer_model_path`: Path to the pretrained WavTokenizer model checkpoint
 * `llmvox_checkpoint_path`: Path to the trained LLMVoX model checkpoint
 
 ### Running with Different Configurations
