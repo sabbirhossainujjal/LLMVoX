@@ -12,7 +12,7 @@ config = {
     "gpt_checkpoint_path": "./CHECKPOINTS/ckpt_english_tiny.pt",
     
     # LLM settings
-    #"llm_checkpoint": "meta-llama/Llama-3.1-8B-Instruct",
+    "llm_checkpoint": "meta-llama/Llama-3.1-8B-Instruct",
     #"llm_checkpoint": "microsoft/Phi-4-multimodal-instruct",
     #"llm_checkpoint": "Qwen/Qwen2.5-VL-7B-Instruct"
     "llm_device": "cuda:0",
