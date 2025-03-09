@@ -178,7 +178,7 @@ When you run voice chat:
 4. Initial chunks are smaller for faster response, while later chunks are larger for better quality
 5. Audio is played in real-time while the rest of the response is still being generated
 
-This multi-queue architecture enables both low latency (as fast as 475ms) and high-quality speech output.
+This multi-queue architecture enables both low latency (as fast as 300ms) and high-quality speech output.
 
 #### Text Chat (Text-to-Speech)
 
