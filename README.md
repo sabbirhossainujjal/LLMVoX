@@ -322,7 +322,7 @@ python run_ui.py --ip STREAMING_SERVER_IP --port PORT
 
 # Training Guide
 
-## Dataset Preparation
+### Dataset Preparation
 
 - **Dataset**: [VoiceAssistant-400K](https://huggingface.co/datasets/gpt-omni/VoiceAssistant-400K)
 - **Format**: JSON file with entries mapping text to audio files:
@@ -336,7 +336,7 @@ python run_ui.py --ip STREAMING_SERVER_IP --port PORT
   }
 ]
 ```
-## Key Configuration Parameters
+### Key Configuration Parameters
 
 The training configuration is in `configs/train_config.py`:
 
@@ -389,7 +389,7 @@ python train.py \
 
 This comprehensive command shows all configurable parameters for training a LLMVoX model. Adjust values based on your hardware capabilities and specific requirements.
 
-## Launch Training
+### Launch Training
 ```bash
 #Single GPU
 python train.py --batch_size=8 --learning_rate=5e-5 --n_layer=6
