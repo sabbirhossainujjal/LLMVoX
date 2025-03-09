@@ -241,7 +241,7 @@ api_call("voicechat", {
     "target_language": "English"
 })
 
-# Multimodal Chat (voice + images)
+# Multimodal Chat (voice + images) for model like Phi-4-multimodal-instruct
 api_call("multimodalchat", {
     "audio_base64": audio_data,
     "image_list": [image_base64]
