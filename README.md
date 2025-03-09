@@ -1,5 +1,11 @@
 ## LLMVoX: Autoregressive Streaming Text-to-Speech Model for Any LLM
 
+<div>
+<a href="https://mbzuai-oryx.github.io/LLMVoX/"><img src="https://img.shields.io/badge/Project-Page-blue" alt="Project Page"></a>
+<a href="https://arxiv.org/abs/2503.04724"><img src="https://img.shields.io/badge/arXiv-2503.04724-b31b1b.svg" alt="arXiv"></a>
+<a href="https://github.com/mbzuai-oryx/LLMVoX/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
+</div>
+
 <p align="center">
     <img src="https://i.imgur.com/waxVImv.png" alt="Oryx Video-ChatGPT">
 </p>
@@ -8,11 +14,6 @@
 
 **Mohamed Bin Zayed University of Artificial Intelligence (MBZUAI), UAE**
 
-<div>
-<a href="https://mbzuai-oryx.github.io/LLMVoX/"><img src="https://img.shields.io/badge/Project-Page-blue" alt="Project Page"></a>
-<a href="https://arxiv.org/abs/2503.04724"><img src="https://img.shields.io/badge/arXiv-2503.04724-b31b1b.svg" alt="arXiv"></a>
-<a href="https://github.com/mbzuai-oryx/LLMVoX/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
-</div>
 
 <p align="center">
     <img src="assets/arch_diagram.svg" alt="LLMVoX Architecture" width="800px">
