@@ -217,14 +217,83 @@ python streaming_server.py --chat_type multimodal --llm_checkpoint "microsoft/Ph
 python streaming_server.py --chat_type multimodal --llm_checkpoint "llava-hf/llava-1.5-7b-hf" --llm_device "cuda:0"
 ```
 
-### APIs
+# Client side API reference 
 
-The streaming server exposes several API endpoints:
+Once the streaming server starts , the following is the client side API reference.
+## Endpoints & Parameters
 
-- `/tts`: For text-to-speech conversion
-- `/voicechat`: For voice-based conversations
-- `/multimodalchat`: For multimodal interactions
-- `/vlmschat`: For visual speech interactions
+| Endpoint | Purpose | Required Parameters |
+|----------|---------|---------------------|
+| `/tts` | Text-to-speech | `text`: String to convert |
+| `/voicechat` | Voice conversations | `audio_base64`: Encoded speech<br>`source_language`: Input language for Whisper ASR<br>`target_language`: Output language for Whisper ASR |
+| `/multimodalchat` | Voice + multiple images | `audio_base64`: Encoded speech<br>`image_list`: Array of base64 images |
+| `/vlmschat` | Voice + single image | `audio_base64`: Encoded speech<br>`image_base64`: Single image<br>`source_language`: Input language for Whisper ASR<br>`target_language`: Output language for Whisper ASR |
+
+## Common Streaming Pattern
+
+```python
+def api_call(endpoint, payload):
+    url = f'http://{server_ip}:5003/{endpoint}'
+    
+    # 1. Set up streaming
+    audio_queue = queue.Queue()
+    
+    # 2. Thread functions
+    def stream_audio():
+        with requests.post(url, json=payload, stream=True) as stream:
+            for chunk in stream.iter_content():
+                if chunk: audio_queue.put(chunk)
+        audio_queue.put(None)  # End signal
+    
+    def play_audio():
+        p = PyAudio()
+        player = p.open(format=paFloat32, channels=1, rate=24000, output=True)
+        while True:
+            chunk = audio_queue.get()
+            if chunk is None: break
+            player.write(chunk)
+        player.close()
+        p.terminate()
+    
+    # 3. Run threads
+    threading.Thread(target=stream_audio).start()
+    threading.Thread(target=play_audio).start()
+```
+
+## Usage Examples
+
+```python
+# Text-to-Speech
+api_call("tts", {"text": "Hello world"})
+
+# Voice Chat
+api_call("voicechat", {
+    "audio_base64": audio_data,
+    "source_language": "English",
+    "target_language": "English"
+})
+
+# Multimodal Chat (voice + images)
+api_call("multimodalchat", {
+    "audio_base64": audio_data,
+    "image_list": [image_base64]
+})
+
+# Visual Language Model (voice + image)
+api_call("vlmschat", {
+    "audio_base64": audio_data,
+    "image_base64": image_base64,
+    "source_language": "English",
+    "target_language": "English"
+})
+```
+
+## Converting Image to Base64
+```python
+def load_base64_from_image(image_path):
+    with open(image_path, "rb") as image_file:
+        return base64.b64encode(image_file.read()).decode('utf-8')
+```
 
 # LLMVoX Training Guide
 
