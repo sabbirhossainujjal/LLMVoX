@@ -18,7 +18,6 @@ scipy
 soundfile
 torch
 torchaudio
-torchcrepe
 tqdm
 transformers
 uvicorn
