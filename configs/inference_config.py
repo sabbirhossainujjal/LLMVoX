@@ -9,7 +9,7 @@ config = {
     "wav_model_path": "./CHECKPOINTS/wavtokenizer_large_speech_320_24k.ckpt",
     "encoder_model_path": "charsiu/g2p_multilingual_byT5_tiny_16_layers_100",
     "tokenizer_path": "google/byt5-small",
-    "gpt_checkpoint_path": "./CHECKPOINTS/ckpt_english_tiny.pt",
+    "llmvox_checkpoint_path": "./CHECKPOINTS/ckpt_english_tiny.pt",
     
     # LLM settings
     "llm_checkpoint": "meta-llama/Llama-3.1-8B-Instruct",

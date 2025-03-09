@@ -1,5 +1,5 @@
 """
-voicechat_server-
+streaming-server.py-
 Streaming TTS Server Application
 
 This is a FastAPI application that provides a streaming text-to-speech API
@@ -36,7 +36,7 @@ def parse_arguments():
     parser.add_argument("--wav_model_path", type=str, help="Path to wave tokenizer model")
     parser.add_argument("--encoder_model_path", type=str, help="Path to encoder model")
     parser.add_argument("--tokenizer_path", type=str, help="Path to tokenizer")
-    parser.add_argument("--gpt_checkpoint_path", type=str, help="Path to GPT checkpoint")
+    parser.add_argument("--llmvox_checkpoint_path", type=str, help="Path to GPT checkpoint")
     
     # LLM settings
     parser.add_argument("--llm_checkpoint", type=str, help="LLM checkpoint path")

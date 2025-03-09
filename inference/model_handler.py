@@ -140,8 +140,8 @@ class ModelHandler:
         Returns:
             Initialized GPT model
         """
-        print(f"Loading GPT model from {self.config['gpt_checkpoint_path']}")
-        checkpoint = torch.load(self.config['gpt_checkpoint_path'], map_location=self.device)
+        print(f"Loading GPT model from {self.config['llmvox_checkpoint_path']}")
+        checkpoint = torch.load(self.config['llmvox_checkpoint_path'], map_location=self.device)
         checkpoint_model_args = checkpoint['model_args']
         model_args = {k: checkpoint_model_args[k] for k in ['n_layer', 'n_head', 'n_embd', 'block_size', 'bias', 'vocab_size']}
         model_args["is_train"]=False
