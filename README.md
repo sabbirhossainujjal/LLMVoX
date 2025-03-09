@@ -60,10 +60,6 @@ mkdir -p CHECKPOINTS
 
 ## Quick Start
 
-### Configuration Basics
-
-## Quick Start
-
 ### Download Required Checkpoints
 
 Download the necessary model checkpoints from Hugging Face:
