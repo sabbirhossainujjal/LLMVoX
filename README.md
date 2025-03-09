@@ -216,17 +216,83 @@ The streaming server exposes several API endpoints:
 - `/multimodalchat`: For multimodal interactions
 - `/vlmschat`: For visual speech interactions
 
-### Training Your Own Model
+# LLMVoX Training Guide
 
-To train LLMVoX on your own data:
+## Dataset Preparation
+
+- **Dataset**: [VoiceAssistant-400K](https://huggingface.co/datasets/gpt-omni/VoiceAssistant-400K)
+- **Format**: JSON file with entries mapping text to audio files:
+```json
+[
+  {
+    "speech_folder": "/path/to/audio/files",
+    "speech_file": "audio1.wav",
+    "answer_text": "Text transcript",
+    "id": "unique_id_1"
+  }
+]
+```
+## Key Configuration Parameters
+
+The training configuration is in `configs/train_config.py`:
+
+- **Model Architecture**: 
+  - `n_layer`: Number of transformer layers (default: 4)
+  - `n_head`: Number of attention heads (default: 8)
+  - `n_embd`: Embedding dimension (default: 768)
+  - `block_size`: Context length (default: 8192)
+
+- **Training Settings**:
+  - `gradient_accumulation_steps`: Accumulate gradients before updating (default: 4)
+  - `batch_size`: Batch size per GPU (default: 2)
+  - `learning_rate`: Peak learning rate (default: 3e-4)
+  - `max_iters`: Maximum iterations (default: 2600000)
+
+- **Paths**:
+  - `data_path`: Path to dataset JSON
+  - `speech_data_folder`: Path to audio files
+  - `out_dir`: Output directory for checkpoints
+  - `encoder_model_path`: Path to ByT5 model for multilingual grapheme-to-phoneme conversion from [CharsiuG2P](https://github.com/lingjzhu/CharsiuG2P/tree/main) that provides phoneme embeddings for words
+
+## Training Commands
+```bash
+python train.py --batch_size=8 --learning_rate=5e-5 --n_layer=6
+#Distributed Training
+torchrun --standalone --nproc_per_node=4 train.py --batch_size=16
+```
+
+## Launch Training 
 
 ```bash
-# Single GPU training
-python train.py --batch_size=2 --compile=True
-
-# Distributed training on multiple GPUs
-torchrun --standalone --nproc_per_node=4 train.py
+python train.py \
+  --n_layer=4 \
+  --n_head=8 \
+  --n_embd=768 \
+  --block_size=8192 \
+  --dropout=0.0 \
+  --bias=False \
+  --data_path="/path/to/dataset.json" \
+  --speech_data_folder="/path/to/audio_files" \
+  --encoder_model_path="charsiu/g2p_multilingual_byT5_tiny_16_layers_100" \
+  --tokenizer_path="google/byt5-small" \
+  --wav_config_path="WavTokenizer/configs/wavtokenizer_smalldata_frame75_3s_nq1_code4096_dim512_kmeans200_attn.yaml" \
+  --wav_model_path="/path/to/wavtokenizer_large_speech_320_24k.ckpt" \
+  --out_dir="my_llmvox_model" \
+  --batch_size=2 \
+  --gradient_accumulation_steps=4 \
+  --learning_rate=3e-4 \
+  --weight_decay=1e-1 \
+  --warmup_iters=50000 \
+  --lr_decay_iters=2600000 \
+  --min_lr=3e-6 \
+  --eval_interval=1000 \
+  --compile=True \
+  --wandb_log=True \
+  --wandb_project="speech_stream" \
+  --wandb_run_name="llmvox_training_run"
 ```
+
+This comprehensive command shows all configurable parameters for training a LLMVoX model. Adjust values based on your hardware capabilities and specific requirements.
 
 ## Citation
 
