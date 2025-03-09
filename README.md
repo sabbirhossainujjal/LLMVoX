@@ -301,6 +301,9 @@ You can easily create text-streamer for your custom model and integrate it with 
 This local demo UI is built using PyQt5.
 #### Launch demo
 ```
+#Run a streaming server
+python streaming_server.py --chat_type voice --llm_checkpoint "meta-llama/Llama-3.1-8B-Instruct" --eos_token "<|eot_id|>" --llm_max_tokens 1000 --api_port PORT
+#Run local demo UI
 python run_ui.py --ip STREAMING_SERVER_IP --port PORT 
 
 ```
