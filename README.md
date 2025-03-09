@@ -52,6 +52,16 @@ mkdir -p CHECKPOINTS
 
 ## Quick Start
 
+#### Inference Configuration
+
+Key parameters in the inference configuration:
+- `chat_type`: Supported modes include 'text', 'visual_speech', and 'multimodal'
+- `llm_checkpoint`: Specify the LLM to use (e.g., "meta-llama/Llama-3.1-8B-Instruct")
+- `tts_device_1` and `tts_device_2`: GPU IDs for the TTS models
+- `initial_dump_size_1` and `initial_dump_size_2`: Initial chunk sizes for speech generation
+- `max_dump_size`: Maximum chunk size for better speech quality
+- `system_prompt`: Default prompt for the LLM
+
 ### Running the Streaming Server
 
 LLMVoX provides a streaming server that can be run with different configurations:
@@ -93,6 +103,15 @@ The streaming server exposes several API endpoints:
 
 ### Training Your Own Model
 
+#### Training Configuration
+
+Key parameters in the training configuration:
+- `n_layer`, `n_head`, `n_embd`: Model architecture parameters
+- `block_size`: Context size for attention
+- `batch_size` and `gradient_accumulation_steps`: Training batch parameters
+- `learning_rate` and related parameters: Optimization settings
+- `data_path` and `speech_data_folder`: Paths to training data
+
 To train LLMVoX on your own data:
 
 ```bash
@@ -118,30 +137,6 @@ LLMVoX uses a decoder-only Transformer architecture that autoregressively predic
 3. **Decoder-only Transformer**: A lightweight 4-layer transformer that generates speech tokens
 4. **Multi-Queue Streaming**: Enables continuous and potentially infinite-length speech generation
 
-
-
-## Configuration
-
-LLMVoX provides extensive configuration options for both training and inference:
-
-### Inference Configuration
-
-Key parameters in the inference configuration:
-- `chat_type`: Supported modes include 'text', 'visual_speech', and 'multimodal'
-- `llm_checkpoint`: Specify the LLM to use (e.g., "meta-llama/Llama-3.1-8B-Instruct")
-- `tts_device_1` and `tts_device_2`: GPU IDs for the TTS models
-- `initial_dump_size_1` and `initial_dump_size_2`: Initial chunk sizes for speech generation
-- `max_dump_size`: Maximum chunk size for better speech quality
-- `system_prompt`: Default prompt for the LLM
-
-### Training Configuration
-
-Key parameters in the training configuration:
-- `n_layer`, `n_head`, `n_embd`: Model architecture parameters
-- `block_size`: Context size for attention
-- `batch_size` and `gradient_accumulation_steps`: Training batch parameters
-- `learning_rate` and related parameters: Optimization settings
-- `data_path` and `speech_data_folder`: Paths to training data
 
 ## Citation
 
