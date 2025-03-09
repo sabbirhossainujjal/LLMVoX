@@ -207,14 +207,14 @@ python streaming_server.py --chat_type text --llm_checkpoint "meta-llama/Llama-3
 
 ```bash
 # Using Qwen 2.5 VL as the vision-language model
-python streaming_server.py --chat_type visual_speech --llm_checkpoint "Qwen/Qwen2.5-VL-7B-Instruct" --llm_device "cuda:0"  --asr_model "small"
+python streaming_server.py --chat_type visual_speech --llm_checkpoint "Qwen/Qwen2.5-VL-7B-Instruct" --llm_device "cuda:0"  --asr_model "small" --eos_token "<|im_end|>"
 ```
 
 #### Multimodal Chat with no ASR for models like Phi-4-multimodal-instruct (Speech + Image → Speech) 
 
 ```bash
 # Using Phi-4-multimodal-instruct which has multimodal input with speech , images and text 
-python streaming_server.py --chat_type multimodal --llm_checkpoint "microsoft/Phi-4-multimodal-instruct" --llm_device "cuda:0" --sytem_prompt ""Answer the question in short responses." 
+python streaming_server.py --chat_type multimodal --llm_checkpoint "microsoft/Phi-4-multimodal-instruct" --llm_device "cuda:0" --sytem_prompt  ""Answer the question in short responses." --eos_token "<|end|>"
 
 # Using LLaVA
 python streaming_server.py --chat_type multimodal --llm_checkpoint "llava-hf/llava-1.5-7b-hf" --llm_device "cuda:0"

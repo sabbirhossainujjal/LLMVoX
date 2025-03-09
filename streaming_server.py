@@ -31,13 +31,13 @@ def parse_arguments():
     parser = argparse.ArgumentParser(description="Streaming TTS API Server")
     
     # Model paths
-    parser.add_argument("--chat_type", type=str, help="specify input modalities for chat from ['text','voice','multimodal','visual_speech']")
+    parser.add_argument("--chat_type", type=str, help="Specify input modalities for chat from ['text','voice','multimodal','visual_speech']")
     parser.add_argument("--wav_config_path", type=str, help="Path to wave tokenizer config")
     parser.add_argument("--wav_model_path", type=str, help="Path to wave tokenizer model")
     parser.add_argument("--encoder_model_path", type=str, help="Path to encoder model")
     parser.add_argument("--tokenizer_path", type=str, help="Path to tokenizer")
     parser.add_argument("--llmvox_checkpoint_path", type=str, help="Path to GPT checkpoint")
-    
+
     # LLM settings
     parser.add_argument("--llm_checkpoint", type=str, help="LLM checkpoint path")
     parser.add_argument("--llm_device", type=str, help="Device for LLM (e.g., cuda:0)")
@@ -45,26 +45,34 @@ def parse_arguments():
     parser.add_argument("--llm_temperature", type=float, help="Temperature for LLM sampling")
     parser.add_argument("--llm_top_p", type=float, help="Top-p for LLM sampling")
     parser.add_argument("--llm_top_k", type=int, help="Top-k for LLM sampling")
-    
+
     # TTS model settings
     parser.add_argument("--tts_device_1", type=int, help="GPU ID for TTS model 1")
     parser.add_argument("--tts_device_2", type=int, help="GPU ID for TTS model 2")
-    
+
     # Streaming settings
     parser.add_argument("--system_prompt", type=str, help="System prompt for LLM")
     parser.add_argument("--initial_dump_size_1", type=int, help="Initial chunk size for model 1")
     parser.add_argument("--initial_dump_size_2", type=int, help="Initial chunk size for model 2")
     parser.add_argument("--max_dump_size", type=int, help="Maximum chunk size")
     parser.add_argument("--max_audio_length", type=int, help="Maximum audio length")
-    
+
     # Special tokens
     parser.add_argument("--eos_token", type=str, help="End of sequence token")
     parser.add_argument("--pad_token_id", type=int, help="Padding token ID")
     parser.add_argument("--eoa_token_id", type=int, help="End of audio token ID")
-    
+
     # API settings
     parser.add_argument("--api_host", type=str, help="API host address")
     parser.add_argument("--api_port", type=int, help="API port number")
+
+    # ASR settings
+    parser.add_argument("--asr_model", type=str, default="small", help="Whisper model variant: tiny, base, small, medium, large")
+    parser.add_argument("--asr_device", type=str, default="cuda:2", help="Device for ASR model")
+    parser.add_argument("--asr_sample_rate", type=float, default=16000.0, help="Audio sample rate in Hz")
+    parser.add_argument("--asr_max_audio_length", type=int, default=60, help="Maximum audio length in seconds")
+    parser.add_argument("--asr_default_language", type=str, default="english", help="Default language for transcription")
+    parser.add_argument("--asr_enable_translation", type=bool, default=False, help="Enable translation instead of transcription by default")
     
     args = parser.parse_args()
     
@@ -179,7 +187,7 @@ def text_streamer_producer(
     system_text = config["system_prompt"]
     if config['chat_type'] in ['voice','text']:
         # Get system prompt from config
-        if config['chat_type'] == 'text':
+        if request.text:
             prompt_text = request.text
             print(f"Received TTS request: {prompt_text}")
         else:
