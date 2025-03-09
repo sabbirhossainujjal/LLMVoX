@@ -372,14 +372,11 @@ torchrun --standalone --nproc_per_node=4 train.py --batch_size=16
 If you find our work useful, please consider citing:
 
 ```bibtex
-@misc{shikhar2025llmvoxautoregressivestreamingtexttospeech,
-    title={LLMVoX: Autoregressive Streaming Text-to-Speech Model for Any LLM},
-    author={Sambal Shikhar,Mohammed Irfan Kurpath,Sahal Shaji Mullappilly,Jean Lahoud,Fahad Khan,Rao Muhammad Anwer,Salman Khan and Hisham Cholakkal},
-    year={2025},
-    eprint={2503.04724},
-    archivePrefix={arXiv},
-    primaryClass={cs.CL},
-    url={https://arxiv.org/abs/2503.04724}
+@article{shikhar2025llmvox,
+  title={LLMVoX: Autoregressive Streaming Text-to-Speech Model for Any LLM},
+  author={Shikhar, Sambal and Kurpath, Mohammed Irfan and Mullappilly, Sahal Shaji and Lahoud, Jean and Khan, Fahad and Anwer, Rao Muhammad and Khan, Salman and Cholakkal, Hisham},
+  journal={arXiv preprint arXiv:2503.04724},
+  year={2025}
 }
 ```
 
