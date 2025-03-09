@@ -73,11 +73,6 @@ LLMVoX requires a few base paths to be set correctly in the inference configurat
 * `wavtokenizer_model_path`: Path to the pretrained WavTokenizer model checkpoint
 * `llmvox_checkpoint_path`: Path to the trained LLMVoX model checkpoint
 
-LLMVoX requires a few base paths to be set correctly in the inference configuration file at `configs/inference_config.py`:
-
-* `wavtokenizer_model_path`: Path to the pretrained WavTokenizer model checkpoint
-* `llmvox_checkpoint_path`: Path to the trained LLMVoX model checkpoint
-
 ### Running with Different Configurations
 
 #### Voice Chat Configuration Guide
