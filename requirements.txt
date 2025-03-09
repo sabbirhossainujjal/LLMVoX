@@ -16,8 +16,6 @@ PyYAML
 Requests
 scipy
 soundfile
-torch
-torchaudio
 tqdm
 transformers
 uvicorn

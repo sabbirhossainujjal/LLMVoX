@@ -31,6 +31,10 @@ Key features:
 ### Requirements
 
 ```bash
+# System requirements
+# - CUDA 11.7 or higher
+# - Flash Attention 2.0+ compatible GPU (Ampere architecture or newer)
+
 # Clone the repository
 git clone https://github.com/mbzuai-oryx/LLMVoX.git
 cd LLMVoX
@@ -39,7 +43,13 @@ cd LLMVoX
 conda create -n llmvox python=3.9
 conda activate llmvox
 
-# Install dependencies
+# Install PyTorch with CUDA 11.8 support
+pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+
+# Install Flash Attention
+pip install flash-attn --no-build-isolation
+
+# Install remaining dependencies
 pip install -r requirements.txt
 
 # Download checkpoints (if not already in the repository)
@@ -301,7 +311,7 @@ If you find our work useful, please consider citing:
 ```bibtex
 @misc{shikhar2025llmvoxautoregressivestreamingtexttospeech,
     title={LLMVoX: Autoregressive Streaming Text-to-Speech Model for Any LLM},
-    author={Sambhal Shikhar and Mohammed Irfan Kurpath and Sahal Shaji Mullappilly and Jean Lahoud and Fahad Khan and Rao Muhammad Anwer and Salman Khan and Hisham Cholakkal},
+    author={Sambal Shikhar,Mohammed Irfan Kurpath,Sahal Shaji Mullappilly,Jean Lahoud,Fahad Khan,Rao Muhammad Anwer,Salman Khan and Hisham Cholakkal},
     year={2025},
     eprint={2503.04724},
     archivePrefix={arXiv},
