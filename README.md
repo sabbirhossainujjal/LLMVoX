@@ -385,11 +385,9 @@ If you find our work useful, please consider citing:
 We thank the reviewers and colleagues who provided valuable feedback on this work. We also acknowledge the open-source contributions that made this project possible:
 
 - [Andrej Karpathy's NanoGPT](https://github.com/karpathy/nanoGPT) - Training code for LLMVoX is based on this repository
-- [WavTokenizer](https://github.com/shengbaj/wavtokenizer) - For audio tokenization
+- [WavTokenizer](https://github.com/jishengpeng/WavTokenizer?tab=readme-ov-file) - For audio tokenization
 - [Whisper](https://github.com/openai/whisper) - Used for ASR in our pipeline
-- [FastAPI](https://github.com/tiangolo/fastapi) - For creating our streaming server API
-- [ByT5](https://github.com/google-research/text-to-text-transfer-transformer) - For the multilingual phoneme embeddings
-- [Hugging Face Transformers](https://github.com/huggingface/transformers) - For easy integration with various LLMs
+- [Neural G2P](https://github.com/lingjzhu/CharsiuG2P) - For the multilingual phoneme embeddings
 
 ## License
 
