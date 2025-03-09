@@ -292,6 +292,24 @@ def api_call(endpoint, payload):
 #### Custom models
 You can easily create text-streamer for your custom model and integrate it with LLMVoX in `streaming_server.py` , refer to  `inference` folder to see the streamer template for LLMs ,VLMs and Multimodal LLMs.
 
+
+# Local Demo UI
+This local demo UI is built using PyQt5.
+# Launch demo
+python run_ui.py [options]
+```
+## Options
+```
+--ip STREAMING_SERVER_IP    Server IP (default: 10.127.30.115)
+--port PORT       Server port (default: 5003)
+-v, --verbose     Enable verbose logging
+```
+
+#### Interaction Modes
+- Voice Chat
+- Text Chat
+- Visual Speech
+
 # Training Guide
 
 ## Dataset Preparation
