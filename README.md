@@ -127,10 +127,10 @@ Different LLMs use different end-of-sequence tokens:
 
 ```bash
 # For LLaMA models
-python streaming_server.py --chat_type voice --llm_checkpoint "meta-llama/Llama-3.1-8B-Instruct" --eos_token "<|eot_id|>"
+python streaming_server.py --chat_type voice --llm_checkpoint "meta-llama/Llama-3.1-8B-Instruct" --eos_token "<|eot_id|>" --llm_max_tokens 1000
 
 # For Mistral models
-python streaming_server.py --chat_type voice --llm_checkpoint "mistralai/Mistral-7B-Instruct-v0.2" --eos_token "<|im_end|>"
+python streaming_server.py --chat_type voice --llm_checkpoint "mistralai/Mistral-7B-Instruct-v0.2" --eos_token "<|im_end|>" --llm_temperature 0.7
 
 # For other models (check your model's documentation)
 python streaming_server.py --chat_type voice --llm_checkpoint "your-model-name" --eos_token "<|end|>"
