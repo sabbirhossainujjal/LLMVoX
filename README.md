@@ -229,6 +229,33 @@ Once the streaming server starts , the following is the client side API referenc
 | `/multimodalchat` | Voice + multiple images | `audio_base64`: Encoded speech<br>`image_list`: Array of base64 images |
 | `/vlmschat` | Voice + single image | `audio_base64`: Encoded speech<br>`image_base64`: Single image<br>`source_language`: Input language for Whisper ASR<br>`target_language`: Output language for Whisper ASR |
 
+
+```python
+# Text-to-Speech
+api_call("tts", {"text": "Hello world"})
+
+# Voice Chat
+api_call("voicechat", {
+    "audio_base64": audio_data,
+    "source_language": "English",
+    "target_language": "English"
+})
+
+# Multimodal Chat (voice + images)
+api_call("multimodalchat", {
+    "audio_base64": audio_data,
+    "image_list": [image_base64]
+})
+
+# Visual Language Model (voice + image)
+api_call("vlmschat", {
+    "audio_base64": audio_data,
+    "image_base64": image_base64,
+    "source_language": "English",
+    "target_language": "English"
+})
+```
+
 ## Common Streaming Pattern
 
 ```python
@@ -258,42 +285,6 @@ def api_call(endpoint, payload):
     # 3. Run threads
     threading.Thread(target=stream_audio).start()
     threading.Thread(target=play_audio).start()
-```
-
-## Usage Examples
-
-```python
-# Text-to-Speech
-api_call("tts", {"text": "Hello world"})
-
-# Voice Chat
-api_call("voicechat", {
-    "audio_base64": audio_data,
-    "source_language": "English",
-    "target_language": "English"
-})
-
-# Multimodal Chat (voice + images)
-api_call("multimodalchat", {
-    "audio_base64": audio_data,
-    "image_list": [image_base64]
-})
-
-# Visual Language Model (voice + image)
-api_call("vlmschat", {
-    "audio_base64": audio_data,
-    "image_base64": image_base64,
-    "source_language": "English",
-    "target_language": "English"
-})
-```
-
-### Converting Image to Base64
-```python
-def load_base64_from_image(image_path):
-    with open(image_path, "rb") as image_file:
-        return base64.b64encode(image_file.read()).decode('utf-8')
-```
 
 # LLMVoX Training Guide
 
