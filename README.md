@@ -241,7 +241,7 @@ api_call("voicechat", {
     "target_language": "English"
 })
 
-# Multimodal Chat (voice + images) for model like Phi-4-multimodal-instruct
+# Multimodal Chat (voice + images) for models like Phi-4-multimodal-instruct
 api_call("multimodalchat", {
     "audio_base64": audio_data,
     "image_list": [image_base64]
@@ -285,6 +285,7 @@ def api_call(endpoint, payload):
     # 3. Run threads
     threading.Thread(target=stream_audio).start()
     threading.Thread(target=play_audio).start()
+```
 
 # LLMVoX Training Guide
 
