@@ -18,13 +18,6 @@ Mohamed Bin Zayed University of Artificial Intelligence (MBZUAI), UAE
     <img src="assets/arch_diagram.svg" alt="LLMVoX Architecture" width="800px">
 </p>
 
-<p align="center">
-  <a href="assets/demo_video.mp4">
-    <img src="assets/thumbnail.png" alt="LLMVoX Demo Video" width="800px">
-  </a>
-  <br>
-  <em>Click the image to view the demo video</em>
-</p>
 
 ## Overview
 
