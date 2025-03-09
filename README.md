@@ -288,7 +288,7 @@ api_call("vlmschat", {
 })
 ```
 
-## Converting Image to Base64
+### Converting Image to Base64
 ```python
 def load_base64_from_image(image_path):
     with open(image_path, "rb") as image_file:
