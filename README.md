@@ -58,7 +58,7 @@ LLMVoX requires a few base paths to be set correctly:
 * `wav_model_path`: Path to the pretrained WavTokenizer model checkpoint
 * `encoder_model_path`: Path to the G2P model for phonetic embeddings
 * `tokenizer_path`: Path to the ByT5 tokenizer
-* `gpt_checkpoint_path`: Path to the trained LLMVoX model checkpoint
+* `llmvox_checkpoint_path`: Path to the trained LLMVoX model checkpoint
 
 ### Running with Different Configurations
 
