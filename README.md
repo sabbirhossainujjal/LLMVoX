@@ -9,11 +9,8 @@
 Mohamed Bin Zayed University of Artificial Intelligence (MBZUAI), UAE
 
 <div>
-<a href="https://github.com/mbzuai-oryx/LLMVoX"><img src="https://img.shields.io/badge/Project-Page-blue" alt="Project Page"></a>
-<a href="https://mbzuai-oryx.github.io/LLMVoX/"><img src="https://img.shields.io/badge/Website-blue" alt="Website"></a>
+<a href="https://mbzuai-oryx.github.io/LLMVoX/"><img src="https://img.shields.io/badge/Project-Page-blue" alt="Project Page"></a>
 <a href="https://arxiv.org/abs/2503.04724"><img src="https://img.shields.io/badge/arXiv-2503.04724-b31b1b.svg" alt="arXiv"></a>
-<a href="#"><img src="https://img.shields.io/badge/Paper-green" alt="Paper"></a>
-<a href="#"><img src="https://img.shields.io/badge/Demo-red" alt="Demo"></a>
 <a href="https://github.com/mbzuai-oryx/LLMVoX/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
 </div>
 
