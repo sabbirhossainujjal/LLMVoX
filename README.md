@@ -52,7 +52,7 @@ mkdir -p CHECKPOINTS
 
 ### Configuration Basics
 
-LLMVoX requires a few base paths to be set correctly:
+LLMVoX requires a few base paths to be set correctly in the inference configuration file at `configs/inference_config.py`:
 
 * `wav_config_path`: Path to WavTokenizer configuration file
 * `wav_model_path`: Path to the pretrained WavTokenizer model checkpoint
@@ -184,7 +184,7 @@ This multi-queue architecture enables both low latency (as fast as 300ms) and hi
 
 ```bash
 # Basic text chat with LLaMA 3.1 8B
-python streaming_server.py --chat_type text --llm_checkpoint "meta-llama/Llama-3.1-8B-Instruct" --llm_device "cuda:0" --tts_device_1 1 --tts_device_2 2
+python streaming_server.py --chat_type text --llm_checkpoint "meta-llama/Llama-3.1-8B-Instruct" --llm_device "cuda:0"
 
 # Customize LLM generation parameters
 python streaming_server.py --chat_type text --llm_checkpoint "meta-llama/Llama-3.1-8B-Instruct" --llm_temperature 0.5 --llm_top_p 0.9 --llm_top_k 30
@@ -194,17 +194,14 @@ python streaming_server.py --chat_type text --llm_checkpoint "meta-llama/Llama-3
 
 ```bash
 # Using Qwen 2.5 VL as the vision-language model
-python streaming_server.py --chat_type visual_speech --llm_checkpoint "Qwen/Qwen2.5-VL-7B-Instruct" --llm_device "cuda:0" --tts_device_1 1 --tts_device_2 2
-
-# Using Phi-4 Multimodal
-python streaming_server.py --chat_type visual_speech --llm_checkpoint "microsoft/Phi-4-multimodal-instruct" --llm_device "cuda:0"
+python streaming_server.py --chat_type visual_speech --llm_checkpoint "Qwen/Qwen2.5-VL-7B-Instruct" --llm_device "cuda:0"  --asr_model "small"
 ```
 
 #### Multimodal Chat (Audio + Image → Speech)
 
 ```bash
-# Using Qwen 2.5 VL
-python streaming_server.py --chat_type multimodal --llm_checkpoint "Qwen/Qwen2.5-VL-7B-Instruct" --llm_device "cuda:0" --tts_device_1 1 --tts_device_2 2
+# Using Phi-4-multimodal-instruct which has multimodal input with speech , images and text 
+python streaming_server.py --chat_type multimodal --llm_checkpoint "microsoft/Phi-4-multimodal-instruct" --llm_device "cuda:0" --sytem_prompt ""Answer the question in short responses." 
 
 # Using LLaVA
 python streaming_server.py --chat_type multimodal --llm_checkpoint "llava-hf/llava-1.5-7b-hf" --llm_device "cuda:0"
