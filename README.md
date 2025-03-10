@@ -19,7 +19,7 @@
     <img src="assets/arch_diagram.svg" alt="LLMVoX Architecture" width="800px">
 </p>
 
-
+<video src="https://github.com/mbzuai-oryx/LLMVoX/raw/main/assets/video.mp4" width="180" controls></video>
 ## Overview
 
 LLMVoX is a lightweight 30M-parameter, LLM-agnostic, autoregressive streaming Text-to-Speech (TTS) system designed to convert text outputs from Large Language Models into high-fidelity streaming speech with low latency. Our approach achieves significantly lower Word Error Rate compared to speech-enabled LLMs while operating at comparable latency and speech quality.
