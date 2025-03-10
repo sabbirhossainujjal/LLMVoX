@@ -54,6 +54,10 @@ pip install flash-attn --no-build-isolation
 # Install remaining dependencies
 pip install -r requirements.txt
 
+
+# Add path to wavtokenizer to avoid importing errors
+export PYTHONPATH=./WavTokenizer/:$PYTHONPATH
+
 # Download checkpoints (if not already in the repository)
 mkdir -p CHECKPOINTS
 # Download wavtokenizer_large_speech_320_24k.ckpt and ckpt_english_tiny.pt
