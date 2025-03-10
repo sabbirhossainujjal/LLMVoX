@@ -25,7 +25,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import numpy as np
 from inference.asr import ASR
-
+import re
 def parse_arguments():
     """Parse command line arguments and override config."""
     parser = argparse.ArgumentParser(description="Streaming TTS API Server")
@@ -103,30 +103,53 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Text processing utility
 def clean_text(text, eos_token=config["eos_token"]):
     """
-    Clean and normalize text from the LLM.
+    Clean and normalize text from the LLM for better TTS performance.
     
     Args:
         text: Text to clean
         eos_token: End of sequence token
         
     Returns:
-        Cleaned text
+        Cleaned text optimized for TTS
     """
+    # Basic cleaning
     text = text.strip()
     text = text.replace("**", "")
-    text = text.replace("!", ".")
+    # text = text.replace("!", ".")
     text = text.replace("-", " ")
-
-    # allowed_chars="?,."
-    # # Escape allowed characters in case any have special meanings in regex.
-    # escaped_allowed = re.escape(allowed_chars)
-    # # Define a pattern to match any character that is not alphanumeric or in allowed_chars.
-    # pattern = f"[^A-Za-z0-9{escaped_allowed}]"
-    # # Replace all characters matching the pattern with an empty string.
-    # return re.sub(pattern, "", text)
+    
+    # Remove periods after numbers (e.g., "5." becomes "5")
+    text = re.sub(r'(\d)\.(?=\s|$)', r'\1', text)
+    
+    # Handle special characters that may cause issues
+    text = re.sub(r'\*', '', text)                 # Remove asterisks
+    text = re.sub(r'#', ' number ', text)          # Replace hashtags
+    text = re.sub(r'&', ' and ', text)             # Replace ampersands
+    text = re.sub(r'@', ' at ', text)              # Replace @ symbols
+    
+    # Replace multiple spaces with a single space
+    text = re.sub(r'\s+', ' ', text)
+    
+    # Handle ellipses (prevent awkward pauses)
+    text = re.sub(r'\.{3,}', ' pause ', text)
+    
+    # Handle other TTS-unfriendly patterns
+    text = re.sub(r'(\d),(\d)', r'\1\2', text)     # Remove commas in numbers
+    text = re.sub(r'\/+', ' slash ', text)         # Replace slashes
+    text = re.sub(r'\\+', ' backslash ', text)     # Replace backslashes
+    
+    # Convert unicode characters to ASCII where possible
+    text = re.sub(r'[""]', '"', text)              # Smart quotes to straight quotes
+    text = re.sub(r'['']', "'", text)              # Smart apostrophes to straight quotes
+    
+    # Remove remaining non-alphanumeric characters except allowed punctuation
+    # Uncomment and modify as needed
+    # allowed_chars = ".,?;:()\"' "
+    # pattern = f"[^A-Za-z0-9{re.escape(allowed_chars)}]"
+    # text = re.sub(pattern, "", text)
+    
     return text
 
 # Global model handlers (initialized on startup)
@@ -209,6 +232,8 @@ def text_streamer_producer(
             # Skip empty outputs
             if output in ['', '-']:
                 continue
+
+            output=output.strip()
             # Clean the output text
             if output!=eos:
                 output = clean_text(output, eos)

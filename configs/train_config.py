@@ -1,6 +1,5 @@
 """
-Configuration settings for speech prediction model.
-Includes parameters for both training and inference.
+Configuration setting for training
 """
 import torch
 
