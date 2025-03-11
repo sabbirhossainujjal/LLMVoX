@@ -13,7 +13,11 @@ from WavTokenizer.decoder.pretrained import WavTokenizer
 from src.model import GPTConfig, GPT
 from .llm_streaming import StreamModel
 from .multimodal_streaming import StreamMultimodalModel
-from .vlm_streaming import StreamVLM
+try:
+    from .vlm_streaming import StreamVLM
+except:
+    print("Update transformers version for Qwen 2.5 VL")
+    pass
 
 def smart_tokenizer_and_embedding_resize(special_tokens_dict: Dict, tokenizer, model):
     """

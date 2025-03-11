@@ -241,14 +241,12 @@ if __name__ == "__main__":
     for i in range(5):
         start = time.time()
 
-
-        
-        image_raw=load_base64_from_image("/nvme-data/sambal/LLMVoX/inference/image_sample.png")
+        image_raw=load_base64_from_image("/nvme-data/sambal/LLMVoX/assets/image_sample.png")
 
         text_streamer = model.predict({
             "system": system, 
             "prompt": "",
-            "audio_files" :["/nvme-data/sambal/LLMVoX/inference/audio_sample_phi4.wav"],
+            "audio_files" :["/nvme-data/sambal/LLMVoX/assets/audio_sample_phi4.wav"],
             "images_data":[image_raw]
         })
         
