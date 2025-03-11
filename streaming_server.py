@@ -206,7 +206,7 @@ def text_streamer_producer(
     system_text = config["system_prompt"]
     if config['chat_type'] in ['voice','text']:
         # Get system prompt from config
-        if request.text:
+        if "text" in request:
             prompt_text = request.text
             print(f"Received TTS request: {prompt_text}")
         else:
