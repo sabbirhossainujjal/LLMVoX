@@ -140,10 +140,6 @@ def clean_text(text, eos_token=config["eos_token"]):
     text = re.sub(r'\/+', ' slash ', text)         # Replace slashes
     text = re.sub(r'\\+', ' backslash ', text)     # Replace backslashes
     
-    # Convert unicode characters to ASCII where possible
-    text = re.sub(r'[""]', '"', text)              # Smart quotes to straight quotes
-    text = re.sub(r'['']', "'", text)              # Smart apostrophes to straight quotes
-    
     # Remove remaining non-alphanumeric characters except allowed punctuation
     # Uncomment and modify as needed
     # allowed_chars = ".,?;:()\"' "
