@@ -279,9 +279,9 @@ from pyaudio import PyAudio, paFloat32
 import time
 
 
-def tts(text, audio_outpath='output_audio.wav'):
-    server_ip = "10.127.30.115"
-    endpoint = f'http://{server_ip}:5003/tts'
+def tts(text, SERVER_IP,PORT,audio_outpath='output_audio.wav'):
+    server_ip = SERVER_IP
+    endpoint = f'http://{server_ip}:PORT/tts'
 
     # Audio playback parameters
     sample_rate = 24000
@@ -401,7 +401,7 @@ def tts(text, audio_outpath='output_audio.wav'):
 
 if __name__ == '__main__':
     text="hello how are you?"
-    tts(text,audio_outpath="output.wav")
+    tts(text,SERVER_IP,PORT,audio_outpath="output.wav")
 ```
 ### Custom models
 You can easily create text-streamer for your custom model and integrate it with LLMVoX in `streaming_server.py` , refer to  `inference` folder to see the streamer template for LLMs ,VLMs and Multimodal LLMs.
