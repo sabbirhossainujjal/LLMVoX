@@ -269,32 +269,139 @@ api_call("vlmschat", {
 ## Common Streaming Pattern
 
 ```python
-def api_call(endpoint, payload):
-    url = f'http://{server_ip}:5003/{endpoint}'
-    
-    # 1. Set up streaming
-    audio_queue = queue.Queue()
-    
-    # 2. Thread functions
+import threading
+import queue
+import requests
+import torch
+import torchaudio
+import numpy as np
+from pyaudio import PyAudio, paFloat32
+import time
+
+
+def tts(text, audio_outpath='output_audio.wav'):
+    server_ip = "10.127.30.115"
+    endpoint = f'http://{server_ip}:5003/tts'
+
+    # Audio playback parameters
+    sample_rate = 24000
+    channels = 1
+    chunk_size = 10000
+    frames_per_buffer = 10000  # Must match the server's chunk size if possible
+
+    audio_queue = queue.Queue()  # Buffer for audio playback
+    audio_chunks = []  # Buffer to store audio for saving
+    start=time.time()
     def stream_audio():
-        with requests.post(url, json=payload, stream=True) as stream:
-            for chunk in stream.iter_content():
-                if chunk: audio_queue.put(chunk)
-        audio_queue.put(None)  # End signal
-    
+        """Streams audio from the server and enqueues it for playback and saving."""
+        try:
+            with requests.post(endpoint, json={"text": text}, stream=True) as stream:
+                stream.raise_for_status()  # Raise an error for bad status codes
+                for chunk in stream.iter_content(chunk_size=None):
+                    if chunk:
+                        try:
+                            # Enqueue the chunk for playback
+                            print(f"Got chunk at {time.time()-start}")
+                            audio_queue.put(chunk, timeout=1)
+                            # Store the chunk for saving
+                            audio_chunks.append(chunk)
+                        except queue.Full:
+                            print("Audio queue is full. Dropping chunk.")
+        except requests.exceptions.RequestException as e:
+            print(f"RequestException: {e}")
+        finally:
+            # Signal the end of streaming
+            audio_queue.put(None)
+
     def play_audio():
+        """Plays audio chunks from the queue using PyAudio."""
         p = PyAudio()
-        player = p.open(format=paFloat32, channels=1, rate=24000, output=True)
-        while True:
-            chunk = audio_queue.get()
-            if chunk is None: break
-            player.write(chunk)
-        player.close()
-        p.terminate()
-    
-    # 3. Run threads
-    threading.Thread(target=stream_audio).start()
-    threading.Thread(target=play_audio).start()
+        try:
+            player = p.open(format=paFloat32,
+                            channels=channels,
+                            rate=sample_rate,
+                            output=True,)
+
+            while True:
+                chunk = audio_queue.get()
+                if chunk is None:
+                    print("End of streaming.")
+                    break  # End of streaming
+                if not chunk:
+                    print("Received an empty chunk. Skipping.")
+                    continue  # Skip empty chunks
+
+                try:
+                    print("Playing chunk")
+                    player.write(chunk)
+                except Exception as e:
+                    print(f"Error during playback: {e}")
+                    break
+        finally:
+            player.stop_stream()
+            player.close()
+            p.terminate()
+
+    # Start streaming and playback in separate threads
+    stream_thread = threading.Thread(target=stream_audio, daemon=True)
+    play_thread = threading.Thread(target=play_audio, daemon=True)
+
+    stream_thread.start()
+    play_thread.start()
+
+    # Wait for both threads to finish
+    stream_thread.join()
+    play_thread.join()
+
+    # After streaming is complete, process and save the audio
+    if audio_chunks:
+        print("Saving audio to file...")
+
+        # Concatenate all audio   kjb jb into a single bytes object
+        audio_bytes = b''.join(audio_chunks)
+
+        # Convert bytes to a NumPy array of float32
+        audio_np = np.frombuffer(audio_bytes, dtype=np.float32)
+
+        # Optional: Normalize if necessary
+        # Uncomment the following lines if you need to normalize the audio
+        # max_val = np.max(np.abs(audio_np))
+        # if max_val > 1.0:
+        #     audio_np = audio_np / max_val
+
+        # Reshape the array to (channels, samples)
+        if channels > 1:
+            audio_np = audio_np.reshape(-1, channels).T  # Transpose to (channels, samples)
+        else:
+            audio_np = audio_np.reshape(1, -1)  # (1, samples)
+
+        # Convert float32 to int16 for 'PCM_S' encoding
+        # Ensure the float32 data is in the range [-1.0, 1.0]
+        audio_np = np.clip(audio_np, -1.0, 1.0)
+        audio_int16 = (audio_np * 32767).astype(np.int16)
+
+        # Convert NumPy array to PyTorch tensor
+        audio_tensor = torch.from_numpy(audio_int16)
+
+        # Save the audio using torchaudio with specified settings
+        try:
+            torchaudio.save(
+                audio_outpath,
+                audio_tensor,
+                sample_rate=sample_rate,
+                encoding='PCM_S',
+                bits_per_sample=16,
+                format='wav'
+            )
+            print(f"Audio successfully saved to {audio_outpath}")
+        except Exception as e:
+            print(f"Error saving audio: {e}")
+    else:
+        print("No audio chunks received. Nothing to save.")
+
+if __name__ == '__main__':
+    text="hello how are you?"
+    tts(text,audio_outpath="output.wav")
 ```
 ### Custom models
 You can easily create text-streamer for your custom model and integrate it with LLMVoX in `streaming_server.py` , refer to  `inference` folder to see the streamer template for LLMs ,VLMs and Multimodal LLMs.
