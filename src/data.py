@@ -126,7 +126,6 @@ class SpeechDataset(Dataset):
         
         text_resp = item["answer_text"]
         speech_file = f"{item['id']}.wav"
-        speech_file= "208437.wav"
         # Process speech audio
         speech_path = os.path.join(self.speech_folder_path, speech_file)
         
