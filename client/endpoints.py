@@ -99,7 +99,7 @@ def load_base64_from_image(image_path):
         image_base64 = base64.b64encode(image_file.read()).decode('utf-8')
     return image_base64
 
-def tts_stream(text, server_ip="10.127.30.115", server_port="5003"):
+def tts_stream(text, server_ip, server_port):
     """
     Convert text to speech and stream the audio.
     
@@ -112,7 +112,7 @@ def tts_stream(text, server_ip="10.127.30.115", server_port="5003"):
     payload = {"text": text}
     stream_audio_from_api(endpoint, payload)
 
-def asr(audio_data_base64, server_ip="10.127.30.115", server_port="5002", src='English', tgt='English'):
+def asr(audio_data_base64, server_ip, server_port, src='English', tgt='English'):
     """
     Perform speech recognition on audio data.
     
@@ -135,7 +135,7 @@ def asr(audio_data_base64, server_ip="10.127.30.115", server_port="5002", src='E
     response = requests.post(endpoint, json=payload).text
     return response.strip()
 
-def voicechat(audio_data_base64, server_ip="10.127.30.115", server_port="5003", src='English', tgt='English'):
+def voicechat(audio_data_base64, server_ip, server_port, src='English', tgt='English'):
     """
     Process audio input and generate a voice response.
     
@@ -154,7 +154,7 @@ def voicechat(audio_data_base64, server_ip="10.127.30.115", server_port="5003", 
     }
     stream_audio_from_api(endpoint, payload)
 
-def vlmschat(audio_data_base64, image_path, server_ip="10.127.30.115", server_port="5003", src='English', tgt='English'):
+def vlmschat(audio_data_base64, image_path, server_ip, server_port, src='English', tgt='English'):
     """
     Process audio input with visual context and generate a voice response.
     
@@ -176,7 +176,7 @@ def vlmschat(audio_data_base64, image_path, server_ip="10.127.30.115", server_po
     }
     stream_audio_from_api(endpoint, payload)
 
-def multimodalchat(audio_data_base64, image_path, server_ip="10.127.30.115", server_port="5003", src='English', tgt='English'):
+def multimodalchat(audio_data_base64, image_path, server_ip, server_port, src='English', tgt='English'):
     """
     Process audio input with multiple images and generate a voice response.
     
