@@ -521,6 +521,11 @@ If you find our work useful, please consider citing:
 }
 ```
 
+
+## 📜 License 
+
+LLMVoX is released under the CC-BY-NC-SA 4.0 License. For more details, please refer to the [LICENSE](https://github.com/mbzuai-oryx/LLMVoX/blob/main/LICENSE.txt) file included in this repository.
+
 ## Acknowledgments
 
 We thank the reviewers and colleagues who provided valuable feedback on this work. We also acknowledge the open-source contributions that made this project possible:
