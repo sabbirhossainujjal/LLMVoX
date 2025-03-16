@@ -534,7 +534,3 @@ We thank the reviewers and colleagues who provided valuable feedback on this wor
 - [WavTokenizer](https://github.com/jishengpeng/WavTokenizer?tab=readme-ov-file) - For audio tokenization
 - [Whisper](https://github.com/openai/whisper) - Used for ASR in our pipeline
 - [Neural G2P](https://github.com/lingjzhu/CharsiuG2P) - For the multilingual phoneme embeddings
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
