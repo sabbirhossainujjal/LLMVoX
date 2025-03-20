@@ -77,7 +77,7 @@ def parse_args():
     parser.add_argument('--eval_iters', type=int, help='Number of iterations for evaluation')
     parser.add_argument('--eval_only', type=bool, help='Whether to only evaluate the model')
     parser.add_argument('--always_save_checkpoint', type=bool, help='Whether to always save checkpoints')
-    parser.add_argument('--init_from', type=str, choices=['scratch', 'c', 'gpt2', 'gpt2-medium', 'gpt2-large', 'gpt2-xl'], 
+    parser.add_argument('--init_from', type=str, choices=['scratch', 'resume', 'gpt2', 'gpt2-medium', 'gpt2-large', 'gpt2-xl'], 
                         help='Initialize model from scratch, resume, or pretrained GPT2')
     parser.add_argument('--compile', type=bool, help='Whether to compile the model')
     
