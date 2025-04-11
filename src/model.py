@@ -16,12 +16,15 @@ import torch.nn as nn
 from torch.nn import functional as F
 
 # @torch.jit.script # good to enable when not using torch.compile, disable when using (our default)
+
+
 def new_gelu(x):
     """
     Implementation of the GELU activation function currently in Google BERT repo (identical to OpenAI GPT).
     Reference: Gaussian Error Linear Units (GELU) paper: https://arxiv.org/abs/1606.08415
     """
     return 0.5 * x * (1.0 + torch.tanh(math.sqrt(2.0 / math.pi) * (x + 0.044715 * torch.pow(x, 3.0))))
+
 
 class LayerNorm(nn.Module):
     """ LayerNorm but with an optional bias. PyTorch doesn't support simply bias=False """
@@ -34,13 +37,15 @@ class LayerNorm(nn.Module):
     def forward(self, input):
         return F.layer_norm(input, self.weight.shape, self.weight, self.bias, 1e-5)
 
+
 class CausalSelfAttention(nn.Module):
 
     def __init__(self, config):
         super().__init__()
         assert config.n_embd % config.n_head == 0
         # key, query, value projections for all heads, but in a batch
-        self.c_attn = nn.Linear(config.n_embd, 3 * config.n_embd, bias=config.bias)
+        self.c_attn = nn.Linear(
+            config.n_embd, 3 * config.n_embd, bias=config.bias)
         # output projection
         self.c_proj = nn.Linear(config.n_embd, config.n_embd, bias=config.bias)
         # regularization
@@ -49,21 +54,23 @@ class CausalSelfAttention(nn.Module):
         self.n_head = config.n_head
         self.n_embd = config.n_embd
         self.dropout = config.dropout
-        self.is_train=config.is_train
+        self.is_train = config.is_train
         # flash attention make GPU go brrrrr but support is only in PyTorch >= 2.0
-        self.flash = hasattr(torch.nn.functional, 'scaled_dot_product_attention')
+        self.flash = hasattr(torch.nn.functional,
+                             'scaled_dot_product_attention')
         if not self.flash:
-            print("WARNING: using slow attention. Flash Attention requires PyTorch >= 2.0")
+            print(
+                "WARNING: using slow attention. Flash Attention requires PyTorch >= 2.0")
             # causal mask to ensure that attention is only applied to the left in the input sequence
             self.register_buffer("bias", torch.tril(torch.ones(config.block_size, config.block_size))
-                                        .view(1, 1, config.block_size, config.block_size))
+                                 .view(1, 1, config.block_size, config.block_size))
 
     def forward(self, x, kvcache=None):
-        B, T, C = x.size() # batch size, sequence length, embedding dimensionality (n_embd)
+        B, T, C = x.size()  # batch size, sequence length, embedding dimensionality (n_embd)
 
         # calculate query, key, values for all heads in batch and move head forward to be the batch dim
-        q, k, v  = self.c_attn(x).split(self.n_embd, dim=2)
-        
+        q, k, v = self.c_attn(x).split(self.n_embd, dim=2)
+
         if kvcache:
             prev_k, prev_v = kvcache
             k = torch.cat([prev_k, k], dim=1)
@@ -72,25 +79,33 @@ class CausalSelfAttention(nn.Module):
         new_kvcache = [k, v]
         curr_T = k.shape[1]
 
-        k = k.view(B, curr_T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
-        q = q.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
-        v = v.view(B, curr_T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
+        k = k.view(B, curr_T, self.n_head, C //
+                   self.n_head).transpose(1, 2)  # (B, nh, T, hs)
+        q = q.view(B, T, self.n_head, C //
+                   self.n_head).transpose(1, 2)  # (B, nh, T, hs)
+        v = v.view(B, curr_T, self.n_head, C //
+                   self.n_head).transpose(1, 2)  # (B, nh, T, hs)
 
         # causal self-attention; Self-attend: (B, nh, T, hs) x (B, nh, hs, T) -> (B, nh, T, T)
         if self.flash:
             # efficient attention using Flash Attention CUDA kernels
-            y = torch.nn.functional.scaled_dot_product_attention(q, k, v, attn_mask=None, dropout_p=self.dropout if self.training else 0, is_causal=self.is_train)
-        y = y.transpose(1, 2).contiguous().view(B, T, C) # re-assemble all head outputs side by side
+            y = torch.nn.functional.scaled_dot_product_attention(
+                q, k, v, attn_mask=None, dropout_p=self.dropout if self.training else 0, is_causal=self.is_train)
+        # re-assemble all head outputs side by side
+        y = y.transpose(1, 2).contiguous().view(B, T, C)
         # output projection
         y = self.resid_dropout(self.c_proj(y))
         return y, new_kvcache
+
 
 class MLP(nn.Module):
 
     def __init__(self, config):
         super().__init__()
-        self.c_fc    = nn.Linear(config.n_embd, 4 * config.n_embd, bias=config.bias)
-        self.c_proj  = nn.Linear(4 * config.n_embd, config.n_embd, bias=config.bias)
+        self.c_fc = nn.Linear(
+            config.n_embd, 4 * config.n_embd, bias=config.bias)
+        self.c_proj = nn.Linear(
+            4 * config.n_embd, config.n_embd, bias=config.bias)
         self.dropout = nn.Dropout(config.dropout)
 
     def forward(self, x):
@@ -99,6 +114,7 @@ class MLP(nn.Module):
         x = self.c_proj(x)
         x = self.dropout(x)
         return x
+
 
 class Block(nn.Module):
 
@@ -115,16 +131,20 @@ class Block(nn.Module):
         x = x + self.mlp(self.ln_2(x))
         return x, cache_ele
 
+
 @dataclass
 class GPTConfig:
     block_size: int = 1024
-    vocab_size: int = 50304 # GPT-2 vocab_size of 50257, padded up to nearest multiple of 64 for efficiency
+    # GPT-2 vocab_size of 50257, padded up to nearest multiple of 64 for efficiency
+    vocab_size: int = 50304
     n_layer: int = 12
     n_head: int = 12
     n_embd: int = 768
     dropout: float = 0.0
-    bias: bool = True # True: bias in Linears and LayerNorms, like GPT-2. False: a bit better and faster
-    is_train :bool = True
+    # True: bias in Linears and LayerNorms, like GPT-2. False: a bit better and faster
+    bias: bool = True
+    is_train: bool = True
+
 
 class GPT(nn.Module):
 
@@ -135,10 +155,10 @@ class GPT(nn.Module):
         self.config = config
 
         self.transformer = nn.ModuleDict(dict(
-            wpe = nn.Embedding(config.block_size, config.n_embd),
-            drop = nn.Dropout(config.dropout),
-            h = nn.ModuleList([Block(config) for _ in range(config.n_layer)]),
-            ln_f = LayerNorm(config.n_embd, bias=config.bias),
+            wpe=nn.Embedding(config.block_size, config.n_embd),
+            drop=nn.Dropout(config.dropout),
+            h=nn.ModuleList([Block(config) for _ in range(config.n_layer)]),
+            ln_f=LayerNorm(config.n_embd, bias=config.bias),
         ))
         self.lm_head = nn.Linear(config.n_embd, config.vocab_size, bias=False)
         # with weight tying when using torch.compile() some warnings get generated:
@@ -152,7 +172,8 @@ class GPT(nn.Module):
         # apply special scaled init to the residual projections, per GPT-2 paper
         for pn, p in self.named_parameters():
             if pn.endswith('c_proj.weight'):
-                torch.nn.init.normal_(p, mean=0.0, std=0.02/math.sqrt(2 * config.n_layer))
+                torch.nn.init.normal_(
+                    p, mean=0.0, std=0.02/math.sqrt(2 * config.n_layer))
 
         # report number of parameters
         print("number of parameters: %.2fM" % (self.get_num_params()/1e6,))
@@ -179,11 +200,15 @@ class GPT(nn.Module):
 
     def forward(self, emb, targets=None, kvcache=None):
         device = emb.device
-        b,t,_ = emb.size()
+        b, t, _ = emb.size()
+        print(f"Debugging-emb size: {emb.size()}")
         assert t <= self.config.block_size, f"Cannot forward sequence of length {t}, block size is only {self.config.block_size}"
-        pos = torch.arange(0, t, dtype=torch.long, device=device).unsqueeze(0) # shape (1, t)
+        pos = torch.arange(0, t, dtype=torch.long,
+                           device=device).unsqueeze(0)  # shape (1, t)
 
-        pos_emb = self.transformer.wpe(pos) # position embeddings of shape (1, t, n_embd)
+        # position embeddings of shape (1, t, n_embd)
+        pos_emb = self.transformer.wpe(pos)
+        print(f"Debugging-pos_emb size: {pos_emb.size()}")
         x = self.transformer.drop(emb + pos_emb)
 
         if not kvcache:
@@ -201,10 +226,12 @@ class GPT(nn.Module):
         if targets is not None:
             # if we are given some desired targets also calculate the loss
             logits = self.lm_head(x)
-            loss = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.view(-1), ignore_index=-1000)
+            loss = F.cross_entropy(
+                logits.view(-1, logits.size(-1)), targets.view(-1), ignore_index=-1000)
         else:
             # inference-time mini-optimization: only forward the lm_head on the very last position
-            logits = self.lm_head(x[:, [-1], :]) # note: using list [-1] to preserve the time dim
+            # note: using list [-1] to preserve the time dim
+            logits = self.lm_head(x[:, [-1], :])
             loss = None
 
         return logits, loss, new_kvcache
@@ -215,15 +242,17 @@ class GPT(nn.Module):
         # but want to use a smaller block size for some smaller, simpler model
         assert block_size <= self.config.block_size
         self.config.block_size = block_size
-        self.transformer.wpe.weight = nn.Parameter(self.transformer.wpe.weight[:block_size])
+        self.transformer.wpe.weight = nn.Parameter(
+            self.transformer.wpe.weight[:block_size])
         for block in self.transformer.h:
             if hasattr(block.attn, 'bias'):
-                block.attn.bias = block.attn.bias[:,:,:block_size,:block_size]
+                block.attn.bias = block.attn.bias[:,
+                                                  :, :block_size, :block_size]
 
     @classmethod
     def from_pretrained(cls, model_type, override_args=None):
         assert model_type in {'gpt2', 'gpt2-medium', 'gpt2-large', 'gpt2-xl'}
-        override_args = override_args or {} # default to empty dict
+        override_args = override_args or {}  # default to empty dict
         # only dropout can be overridden see more notes below
         assert all(k == 'dropout' for k in override_args)
         from transformers import GPT2LMHeadModel
@@ -231,15 +260,21 @@ class GPT(nn.Module):
 
         # n_layer, n_head and n_embd are determined from model_type
         config_args = {
-            'gpt2':         dict(n_layer=12, n_head=12, n_embd=768),  # 124M params
-            'gpt2-medium':  dict(n_layer=24, n_head=16, n_embd=1024), # 350M params
-            'gpt2-large':   dict(n_layer=36, n_head=20, n_embd=1280), # 774M params
-            'gpt2-xl':      dict(n_layer=48, n_head=25, n_embd=1600), # 1558M params
+            # 124M params
+            'gpt2':         dict(n_layer=12, n_head=12, n_embd=768),
+            # 350M params
+            'gpt2-medium':  dict(n_layer=24, n_head=16, n_embd=1024),
+            # 774M params
+            'gpt2-large':   dict(n_layer=36, n_head=20, n_embd=1280),
+            # 1558M params
+            'gpt2-xl':      dict(n_layer=48, n_head=25, n_embd=1600),
         }[model_type]
         print("forcing vocab_size=50257, block_size=1024, bias=True")
-        config_args['vocab_size'] = 50257 # always 50257 for GPT model checkpoints
-        config_args['block_size'] = 1024 # always 1024 for GPT model checkpoints
-        config_args['bias'] = True # always True for GPT model checkpoints
+        # always 50257 for GPT model checkpoints
+        config_args['vocab_size'] = 50257
+        # always 1024 for GPT model checkpoints
+        config_args['block_size'] = 1024
+        config_args['bias'] = True  # always True for GPT model checkpoints
         # we can override the dropout rate, if desired
         if 'dropout' in override_args:
             print(f"overriding dropout rate to {override_args['dropout']}")
@@ -249,7 +284,8 @@ class GPT(nn.Module):
         model = GPT(config)
         sd = model.state_dict()
         sd_keys = sd.keys()
-        sd_keys = [k for k in sd_keys if not k.endswith('.attn.bias')] # discard this mask / buffer, not a param
+        # discard this mask / buffer, not a param
+        sd_keys = [k for k in sd_keys if not k.endswith('.attn.bias')]
 
         # init a huggingface/transformers model
         model_hf = GPT2LMHeadModel.from_pretrained(model_type)
@@ -257,12 +293,33 @@ class GPT(nn.Module):
 
         # copy while ensuring all of the parameters are aligned and match in names and shapes
         sd_keys_hf = sd_hf.keys()
-        sd_keys_hf = [k for k in sd_keys_hf if not k.endswith('.attn.masked_bias')] # ignore these, just a buffer
-        sd_keys_hf = [k for k in sd_keys_hf if not k.endswith('.attn.bias')] # same, just the mask (buffer)
-        transposed = ['attn.c_attn.weight', 'attn.c_proj.weight', 'mlp.c_fc.weight', 'mlp.c_proj.weight']
+        sd_keys_hf = [k for k in sd_keys_hf if not k.endswith(
+            '.attn.masked_bias')]  # ignore these, just a buffer
+        sd_keys_hf = [k for k in sd_keys_hf if not k.endswith(
+            '.attn.bias')]  # same, just the mask (buffer)
+
+        # filtering out the embedding matrix ### added after debugging the assertion error
+        sd_keys_hf = [k for k in sd_keys_hf if k != 'transformer.wte.weight']
+
+        transposed = ['attn.c_attn.weight', 'attn.c_proj.weight',
+                      'mlp.c_fc.weight', 'mlp.c_proj.weight']
         # basically the openai checkpoints use a "Conv1D" module, but we only want to use a vanilla Linear
         # this means that we have to transpose these weights when we import them
-        assert len(sd_keys_hf) == len(sd_keys), f"mismatched keys: {len(sd_keys_hf)} != {len(sd_keys)}"
+
+        # ##debugging
+        # print("#"*20)
+        # hf_key_set = set(sd_keys_hf)
+        # target_key_set = set(sd_keys)
+        # extra_keys = hf_key_set - target_key_set
+        # missing_keys = target_key_set - hf_key_set
+
+        # print(f"Extra keys in HF model: {extra_keys}")
+        # print(f"Missing keys in HF model: {missing_keys}")
+        # print("#"*20)
+
+        assert len(sd_keys_hf) == len(
+            sd_keys), f"mismatched keys: {len(sd_keys_hf)} != {len(sd_keys)}"
+
         for k in sd_keys_hf:
             if any(k.endswith(w) for w in transposed):
                 # special treatment for the Conv1D weights we need to transpose
@@ -292,13 +349,17 @@ class GPT(nn.Module):
         ]
         num_decay_params = sum(p.numel() for p in decay_params)
         num_nodecay_params = sum(p.numel() for p in nodecay_params)
-        print(f"num decayed parameter tensors: {len(decay_params)}, with {num_decay_params:,} parameters")
-        print(f"num non-decayed parameter tensors: {len(nodecay_params)}, with {num_nodecay_params:,} parameters")
+        print(
+            f"num decayed parameter tensors: {len(decay_params)}, with {num_decay_params:,} parameters")
+        print(
+            f"num non-decayed parameter tensors: {len(nodecay_params)}, with {num_nodecay_params:,} parameters")
         # Create AdamW optimizer and use the fused version if it is available
-        fused_available = 'fused' in inspect.signature(torch.optim.AdamW).parameters
+        fused_available = 'fused' in inspect.signature(
+            torch.optim.AdamW).parameters
         use_fused = fused_available and device_type == 'cuda'
         extra_args = dict(fused=True) if use_fused else dict()
-        optimizer = torch.optim.AdamW(optim_groups, lr=learning_rate, betas=betas,eps=1e-5,**extra_args)
+        optimizer = torch.optim.AdamW(
+            optim_groups, lr=learning_rate, betas=betas, eps=1e-5, **extra_args)
         print(f"using fused AdamW: {use_fused}")
 
         return optimizer
@@ -314,8 +375,8 @@ class GPT(nn.Module):
         flops_per_fwdbwd = flops_per_token * T
         flops_per_iter = flops_per_fwdbwd * fwdbwd_per_iter
         # express our flops throughput as ratio of A100 bfloat16 peak flops
-        flops_achieved = flops_per_iter * (1.0/dt) # per second
-        flops_promised = 312e12 # A100 GPU bfloat16 peak flops is 312 TFLOPS
+        flops_achieved = flops_per_iter * (1.0/dt)  # per second
+        flops_promised = 312e12  # A100 GPU bfloat16 peak flops is 312 TFLOPS
         mfu = flops_achieved / flops_promised
         return mfu
 
@@ -329,7 +390,8 @@ class GPT(nn.Module):
         kvcache = None
         for _ in range(max_new_tokens):
             # if the sequence context is growing too long we must crop it at block_size
-            idx_cond = idx if idx.size(1) <= self.config.block_size else idx[:, -self.config.block_size:]
+            idx_cond = idx if idx.size(
+                1) <= self.config.block_size else idx[:, -self.config.block_size:]
             # forward the model to get the logits for the index in the sequence
             logits, _, kvcache = self(idx_cond, kvcache=kvcache)
             # pluck the logits at the final step and scale by desired temperature

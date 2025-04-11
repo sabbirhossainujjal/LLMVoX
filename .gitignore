@@ -1,3 +1,23 @@
+llmvox
+*.ipynb
+cache
+.env
+data/
+wandb/
+results/
+
+
+dumy_testing.py
+
+
+
+
+
+
+
+
+
+####### existing ######
 CHECKPOINTS/*
 test.py
 __pycache__
